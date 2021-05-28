@@ -47,11 +47,7 @@
 
             function init() {
                 var buttonDiv = document.getElementById("rankButton");
-                if ({
-                        {
-                            ranked_item | tojson
-                        }
-                    }) {
+                if ( {{ ranked_item | tojson }} ) {
                     var button = document.createElement("button");
                     var dropdownItems = [
                         "Rank 0",
@@ -70,18 +66,10 @@
                             volume = [],
 
                             dataLength = data.length;
-                        var bigData = {
-                            {
-                                warframe_data | tojson
-                            }
-                        };
+                        var bigData = {{ warframe_data | tojson }};
                         dataLength = bigData.length;
                         var avgPrice = [];
-                        if ({
-                                {
-                                    rankedEvenLow | tojson
-                                }
-                            }) {
+                        if ({{ rankedEvenLow | tojson }}) {
                             var starter = 1;
                         } else {
                             var starter = 0;
@@ -212,11 +200,7 @@
                             volume = [],
 
                             dataLength = data.length;
-                        var bigData = {
-                            {
-                                warframe_data | tojson
-                            }
-                        };
+                        var bigData = {{ warframe_data | tojson }};
                         dataLength = bigData.length;
                         var avgPrice = [];
                         for (var i = 0; i < dataLength; i += 1) {
@@ -353,18 +337,10 @@
                         volume = [],
 
                         dataLength = data.length;
-                    var bigData = {
-                        {
-                            warframe_data | tojson
-                        }
-                    };
+                    var bigData = {{ warframe_data | tojson }};
                     dataLength = bigData.length;
                     var avgPrice = [];
-                    if ({
-                            {
-                                rankedEvenLow | tojson
-                            }
-                        }) {
+                    if ({{ rankedEvenLow | tojson }}) {
                         var starter = 1;
                     } else {
                         var starter = 0;
@@ -494,18 +470,10 @@
                         volume = [],
 
                         dataLength = data.length;
-                    var bigData = {
-                        {
-                            warframe_data | tojson
-                        }
-                    };
+                    var bigData = {{ warframe_data | tojson }};
                     dataLength = bigData.length;
                     var avgPrice = [];
-                    if ({
-                            {
-                                rankedEvenLow | tojson
-                            }
-                        }) {
+                    if ({{ rankedEvenLow | tojson }}) {
                         var starter = 0;
                     } else {
                         var starter = 1;
