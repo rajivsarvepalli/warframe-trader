@@ -100,11 +100,7 @@
                                 height: 600
                             },
                             title: {
-                                text: {
-                                    {
-                                        item_name | tojson
-                                    }
-                                }.concat(" Historical")
+                                text: {{ item_name | tojson }}.concat(" Historical")
                             },
                             subtitle: {
                                 text: 'All indicators'
@@ -132,11 +128,7 @@
                             series: [{
                                     type: 'candlestick',
                                     id: 'aapl',
-                                    name: {
-                                        {
-                                            item_name | tojson
-                                        }
-                                    },
+                                    name: {{ item_name | tojson }},
                                     data: ohlc
                                 }, {
                                     type: 'column',
@@ -229,11 +221,7 @@
                                 height: 600
                             },
                             title: {
-                                text: {
-                                    {
-                                        item_name | tojson
-                                    }
-                                }.concat(" Historical")
+                                text: {{ item_name | tojson }}.concat(" Historical")
                             },
                             subtitle: {
                                 text: 'All indicators'
@@ -261,11 +249,7 @@
                             series: [{
                                     type: 'candlestick',
                                     id: 'aapl',
-                                    name: {
-                                        {
-                                            item_name | tojson
-                                        }
-                                    },
+                                    name: {{ item_name | tojson }},
                                     data: bigData
                                 }, {
                                     type: 'column',
@@ -371,11 +355,7 @@
                             height: 600
                         },
                         title: {
-                            text: {
-                                {
-                                    item_name | tojson
-                                }
-                            }.concat(" Historical")
+                            text: {{ item_name | tojson }}.concat(" Historical")
                         },
                         subtitle: {
                             text: 'All indicators'
@@ -403,11 +383,7 @@
                         series: [{
                                 type: 'candlestick',
                                 id: 'aapl',
-                                name: {
-                                    {
-                                        item_name | tojson
-                                    }
-                                },
+                                name: {{ item_name | tojson }},
                                 data: ohlc
                             }, {
                                 type: 'column',
@@ -504,11 +480,7 @@
                             height: 600
                         },
                         title: {
-                            text: {
-                                {
-                                    item_name | tojson
-                                }
-                            }.concat(" Historical")
+                            text: {{ item_name | tojson }}.concat(" Historical")
                         },
                         subtitle: {
                             text: 'All indicators'
@@ -536,11 +508,7 @@
                         series: [{
                                 type: 'candlestick',
                                 id: 'aapl',
-                                name: {
-                                    {
-                                        item_name | tojson
-                                    }
-                                },
+                                name: {{ item_name | tojson }},
                                 data: ohlc
                             }, {
                                 type: 'column',
