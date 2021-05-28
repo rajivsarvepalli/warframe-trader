@@ -633,14 +633,10 @@
     </script>
     <script>
         $(function() {
-            var availableTags = [{
-                    %
-                    for item in items %
-                }
-                "{{item}}",
-                {
-                    % endfor %
-                }
+            var availableTags = [
+                {% for item in items %}
+                    "{{item}}",
+                {% endfor %}
             ];
             $("#search_items").autocomplete({
                 source: function(req, response) {
