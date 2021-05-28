@@ -20,6 +20,7 @@ config = {
     "SEND_FILE_MAX_AGE_DEFAULT": 10800,
 }
 app.config.from_mapping(config)
+app.secret_key = os.environ.get("APP_SECRET")
 cache = Cache(app)
 flask_cache_control = FlaskCacheControl(app)
 

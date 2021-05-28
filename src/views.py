@@ -283,7 +283,7 @@ def webhook() -> None:
         if payload['ref'] != 'refs/heads/main':
             return json.dumps({'msg': 'Not main; ignoring'})
 
-        repo = git.Repo('/var/www/sites/mysite')
+        repo = git.Repo('/home/rajivsarvepalli/warframe-trader')
         origin = repo.remotes.origin
 
         pull_info = origin.pull()
