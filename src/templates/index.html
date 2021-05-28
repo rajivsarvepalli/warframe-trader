@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/utils.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+	
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/jquery-ui.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+    <title>Warframe Trader</title>
+	<style>
+		
+		body,html{
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		}
+
+		.searchbar{
+		margin-top: 2%;
+		height: 60px;
+		width: 200%;
+		background-color: #353b48;
+		border-radius: 30px;
+		padding: 10px;
+		}
+
+		.search_input{
+		color: white;
+		border: 0;
+		outline: 0;
+		background: none;
+		line-height: 40px;
+		transition: width 0.4s linear;
+		}
+
+
+
+		.searchbar:hover > .search_icon{
+		background: white;
+		color: #e74c3c;
+		}
+
+		.search_icon{
+		height: 40px;
+		width: 40px;
+		float: right;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		color:white;
+		}
+		
+	</style>
+  </head>
+	<body>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+	
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="navbar-nav">
+					<a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
+					<div class="nav-item dropdown">
+					<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Tools</a>
+					<div class="dropdown-menu">
+						<a href="{{ url_for('primes_buy') }}" class="dropdown-item">Prime Ranking - Buy</a>
+						<a href="{{ url_for('primes_sell') }}" class="dropdown-item">Prime Ranking - Sell</a>
+					</div>
+				</div>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="blank200">
+					<!-- Blank Space -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-1">
+				</div>
+				<div class="col-sm-10">
+					<center>
+						<h1 class="tagline">Warframe Trader</h1>
+					</center>
+				</div>			
+				<div class="col-sm-1">
+				</div>
+			</div>
+			<div class="row">
+				<div class="blank100">
+					<!-- Blank Space -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2"></div>
+				<div class="col-sm-8">
+						<form class="contact1-form validate-form" action="/predict" method="POST" enctype="multipart/form-data">
+							<input  autocomplete="off" class="input1" type="text" name="search_items" id="search_items" placeholder="Search...">
+							<span class="shadow-input1"></span>
+							<script>
+								$( function() {
+								var availableTags = [
+									{% for item in items %}
+										"{{item}}",
+									{% endfor %}
+								];
+								$( "#search_items" ).autocomplete({
+									source: function(req, response) {
+										var results = $.ui.autocomplete.filter(availableTags, req.term);
+										response(results.slice(0, 10));//for getting 5 results
+									}
+								});
+								} );
+							</script>
+							<div class="container-contact1-form-btn">
+								<button class="contact1-form-btn">
+									<span>Search<i class="" aria-hidden="true"></i></span>
+								</button>
+							</div>
+						</form>						
+				</div>
+				<div class="col-sm-2"></div>
+			</div>
+			<div class="row">
+				<div class="blank100">
+					<!-- Blank Space -->
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-sm-8 text-center">
+					<p style="color:white;">- Created by Rajiv Sarvepalli (GitHub: <a href = "https://github.com/rajivsarvepalli/warframe-trader" class="no-color"> @rajivsarvepalli</a>) </p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

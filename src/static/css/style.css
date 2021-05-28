@@ -1,0 +1,76 @@
+/* Define body style */
+body {
+	font-family: "Roboto";
+	color: white;
+	background: #b92b27;  /* fallback for old browsers */background: -webkit-linear-gradient(to right, #485563, #121212);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to right, #485563, #121212); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+a.no-color { color: inherit; } 
+
+
+/* Fill blank */
+.blank {
+    height: 50px;
+}
+
+.blank100 {
+    height: 100px;
+}
+
+.blank200 {
+    height: 200px;
+}
+
+.blank300 {
+    height: 300px;
+}
+
+
+/* Content */
+.tagline {
+    font-family: "Monoton";
+    font-size: 5vw;
+    color: white;
+}
+
+.white_text { 
+    color: white;
+}
+
+.red_text {
+    color: red;
+    font-size: xx-large;
+}
+
+.green_text {
+    color: green;
+    font-size: xx-large;
+}
+
+.blue_text {
+    color: cyan;
+    font-size: xx-large;
+}
+
+p {
+    color: white;
+    font-size: medium;
+}
+
+/* Footer */
+.footer {
+    background-color: transparent;
+    text-align: center;
+    color: white;
+}
+
+
+/* Import external fonts */
+@font-face{
+    font-family: "Roboto";
+    src: url("../fonts/Roboto_Mono/RobotoMono-Light.ttf")
+}
+@font-face{
+    font-family: "Monoton";
+    src: url("../fonts/Monoton/Monoton-Regular.ttf")
+}

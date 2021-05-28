@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <script>
+            $( function() {
+                var availableTags = [
+                    {% for item in items %}
+                        "{{item}}",
+                    {% endfor %}
+                ];
+                $( "#search_items" ).autocomplete({
+                    source: function(req, response) {
+                        var results = $.ui.autocomplete.filter(availableTags, req.term);
+                        response(results.slice(0, 10));//for getting 5 results
+                    }
+                });
+                } );
+        </script>
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/jquery-ui.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+        <style>
+            p{
+                max-width:40vw;
+                word-wrap:break-word;
+            }
+            body {
+                font-family: "Arial";
+                color: white;
+                background: #b92b27;  /* fallback for old browsers */background: -webkit-linear-gradient(to right, #1565C0, #b92b27);  /* Chrome 10-25, Safari 5.1-6 */
+                background: #485563; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            }
+            a {
+            color: #03DAC6;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav">
+                    <a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
+                    <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Tools</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('primes_buy') }}" class="dropdown-item">Prime Ranking - Buy</a>
+                        <a href="{{ url_for('primes_sell') }}" class="dropdown-item">Prime Ranking - Sell</a>
+                    </div>
+                </div>
+                </div>
+                <form class="form-inline ml-auto" action="/predict" method="POST" enctype="multipart/form-data">
+                    <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search_items" id="search_items" autocomplete="off">
+                    <button type="submit" class="btn btn-outline-light">Search</button>
+                </form>
+            </div>
+        </nav>
+        <h1 id="warframe-trader">Warframe Trader</h1>
+        <p>Warframe trader is a website designed to analyze the data collected by <a href="https://warframe.market/">warframe market</a> and make predictions for the in-game market on warframe. Check out the source code
+        on <a href="https://github.com/rajivsarvepalli/warframe-trader">GitHub</a> if you are interested in contributing.</p>
+        <h2 id="usage">Usage</h2>
+        <p>There are several different use cases for this websites. The main ones are to view the market trends of different items, and to find the best prime items to sell or buy in order to maximize your platinum gains.
+        The best primes to <a href="{{ url_for('primes_sell') }}">sell</a> or <a href="{{ url_for('primes_buy') }}">buy</a> can be accessed using the tools option on the navigation bar at the top. Searching for a warframe item will lead to the chart display for that item's statistical data.</p>
+        <h2 id="motivation">Motivation</h2>
+        <p>When using warframe market to look at the prices of items, I thought it would be interesting to see more statistics collected on the prices of in-game items and see if
+        any prediction techniques could work on these warframe items. I hoped to add a more meaningful way of viewing the statistics collected by warframe market. Additionally,
+        I am working to try to keep a collection of the complete data as time goes on. As of now, warframe market only keeps the past 90 days whereas I intend to keep adding data as
+        they release it so that people are able to track months, and potentially even years of warframe market data.</p>
+        <h2 id="graphs">Graphs</h2>
+        <p>The graphs are used with classic stock indicators. If an item has the ability to be ranked, the charts for both Rank 0 and Maxed Rank are available. Use the dropdown menu to choose which one to view. 
+        Many of these indicators may not provide super meaningful information since they are designed for stocks and warframe items are traded
+        in much smaller quantities than anything on the stock market. So there is much less data to get accurate metrics, and therefore the indicators are certainly not as helpful as with stocks.
+        However, I still found them interesting and worth sharing, so I worked to add them to this website.</p>
+        <h2 id="prime-rankings">Prime Rankings</h2>
+        <p>This is based on predicting what prime parts will go up and down in prices. This process is designed for those wanting to either buy prime parts, or to decide whether to sell
+        their current prime parts right now. However, this is not a perfect process and only is estimated based on the data. I would expect most people to do better if they looked up all the data
+        themselves, but this is an automated prediction to make it easy to view and learn from.</p>
+        <p>There are two different tables included: one for <a href="{{ url_for('primes_sell') }}">selling</a> and one for <a href="{{ url_for('primes_buy') }}">buying</a>. Selling means you are looking to sell prime items, and buying implies you are looking for the best prime items to buy. The higher
+        ranked the item is the better it is to sell or buy. Essentially, this ranking system is trying to predict whether the prices of prime items will go or down.
+        </p>
+        <h4 id="scores">Scores</h4>
+        <p>If you go and view the tables, there is a column called score which scores each prime item. This score is calculated as described below.</p>
+        <p>This score essentially generates a metric of 4 normalized metrics. The 4 metrics used are the ratio of volume bought to volume sold (in the live statistics), the price difference between now and unvaulting time, the percent price difference over between now and unvaulting time, and the date difference between now and the unvaulting time. These 4 metrics are normalized between 0 and 1, and averaged. This average of the 4 metrics is used to rank the items. When buying items, ascending order is used, otherwise, descending order is used. The function responsible for this creation can be viewed on my <a href="https://github.com/rajivsarvepalli/warframe-metrics/blob/main/src/warframe_metrics/market/prime.py#L167-L268">GitHub</a> or its <a href="https://warframe-metrics.readthedocs.io/en/latest/api_reference/_autosummary/warframe_metrics.market.prime.best_prime_complex.html">documentation</a> also describes its workings.</p>
+        <h2 id="contributions">Contributions</h2>
+        <p>The main contributions of this website are to add a place to view warframe market item statistics in more depth. It also intends to add a method for predicting prime item prices.
+        This website is coupled with the PyPI package <a href="https://pypi.org/project/warframe-metrics/"><code>warframe-metrics</code></a>, which I also developed and released. This package is used for collecting data from
+        warframe-market and analyzing it. If you are interested in using this package, please be respectful of warframe market when you collect data from their REST API. I also hope to collect data for a much longer period
+        as more and more data becomes available from warframe market.</p>
+        <h2 id="future-ideas">Future Ideas</h2>
+        <p>When I initially started this project, I was hoping for some posts from Reddit to measure the popularity and sentiment towards warframe items. I hoped that I could establish some connection
+        between warframe market items prices and the Reddit opinion of them. However, the sparsity of data per warframe item made this task very hard. However, perhaps there could be some work done in this direction. 
+        Maybe even using NLP sentiment analysis to understand the likelihood of an item being buffed or nerfed.</p>
+        <p>Aditionally, some time-series prediction could be a useful addition to the graphs displayed per item. One possible algorithm for this is <a href="https://github.com/facebook/prophet">Facebook&#39;s Prophet</a>. However, the compute
+        time and lack of computational resources are why I did not implement it for this website.</p>
+        <h2 id="credit">Credit</h2>
+        <p>All credit to <a href="https://warframe.market/">warframe market</a> for the data collected and used in this website. Additionally, the charts are created using a <a href="https://www.highcharts.com/demo/stock/all-indicators">HighCharts demo</a> to create the stock charts. And of course, thanks to <a href="https://www.pythonanywhere.com/">PythonAnywhere</a> for enabling a way to freely host a web app. </p>
+
+
+    </body>
+</html>

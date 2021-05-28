@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/static/js/Chart.min.js"></script>
+    <script src="/static/js/highstock.js"></script>
+    <script src="/static/js/data.js"></script>
+    <script src="/static/js/exporting.js"></script>
+    <script src="/static/js/indicators-all.js"></script>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <style>
+        .selectors-container {
+            background: #f2f2f2;
+            margin-bottom: 1rem;
+            font-size: 0;
+        }
+
+        .selectors-container .col {
+            font-size: 1.2rem;
+            width: calc(50% - 1em);
+            padding: 0.5em;
+            display: inline-block;
+        }
+
+        .selectors-container select {
+            width: 100%;
+            font-size: 16px;
+            /* prevent page zoom in iOS */
+        }
+
+        @media (max-width: 768px) {
+            .selectors-container .col {
+                display: block;
+                width: calc(100% - 1em);
+            }
+        }
+    </style>
+    <script>
+        (function(window, document, undefined) {
+            window.onload = init;
+
+            function init() {
+                var buttonDiv = document.getElementById("rankButton");
+                if ({
+                        {
+                            ranked_item | tojson
+                        }
+                    }) {
+                    var button = document.createElement("button");
+                    var dropdownItems = [
+                        "Rank 0",
+                        "Max Rank"
+                    ];
+
+                    var menuHtml = '<div class="input-group-btn"><button type="button" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown" role="button" aria-haspopup="true" id="rankSelector" aria-expanded="false">Max Rank</button><div class="dropdown-menu">';
+                    for (i = 0; i < dropdownItems.length; i++) {
+                        menuHtml += '<a class="dropdown-item" onclick="rankSwitcher(this.innerHTML)" href="#">' + dropdownItems[i] + '</a>';
+                    }
+                    menuHtml += '</div></div>';
+                    buttonDiv.innerHTML = menuHtml;
+                    Highcharts.getJSON('{{ warframe_data_url }}', function(data) {
+                        // split the data set into ohlc and volume
+                        var ohlc = [],
+                            volume = [],
+
+                            dataLength = data.length;
+                        var bigData = {
+                            {
+                                warframe_data | tojson
+                            }
+                        };
+                        dataLength = bigData.length;
+                        var avgPrice = [];
+                        if ({
+                                {
+                                    rankedEvenLow | tojson
+                                }
+                            }) {
+                            var starter = 1;
+                        } else {
+                            var starter = 0;
+                        }
+                        console.log(bigData.length)
+                        for (var i = starter; i < dataLength; i += 2) {
+                            ohlc.push([
+                                bigData[i][0], // the date
+                                bigData[i][1], // open
+                                bigData[i][2], // high
+                                bigData[i][3], // low
+                                bigData[i][4] // close
+                            ]);
+
+                            volume.push([
+                                bigData[i][0], // the date
+                                bigData[i][5] // the volume
+                            ]);
+
+                            avgPrice.push([
+                                bigData[i][0], // the date
+                                bigData[i][6] // the avg price
+                            ]);
+                        }
+                        // create the chart
+                        Highcharts.stockChart('container', {
+                            chart: {
+                                height: 600
+                            },
+                            title: {
+                                text: {
+                                    {
+                                        item_name | tojson
+                                    }
+                                }.concat(" Historical")
+                            },
+                            subtitle: {
+                                text: 'All indicators'
+                            },
+                            legend: {
+                                enabled: true
+                            },
+                            rangeSelector: {
+                                selected: 2
+                            },
+                            yAxis: [{
+                                height: '60%'
+                            }, {
+                                top: '60%',
+                                height: '20%'
+                            }, {
+                                top: '80%',
+                                height: '20%'
+                            }],
+                            plotOptions: {
+                                series: {
+                                    showInLegend: true
+                                }
+                            },
+                            series: [{
+                                    type: 'candlestick',
+                                    id: 'aapl',
+                                    name: {
+                                        {
+                                            item_name | tojson
+                                        }
+                                    },
+                                    data: ohlc
+                                }, {
+                                    type: 'column',
+                                    id: 'volume',
+                                    name: 'Volume',
+                                    data: volume,
+                                    yAxis: 1
+                                }, {
+                                    type: 'pc',
+                                    id: 'overlay',
+                                    linkedTo: 'aapl',
+                                    yAxis: 0
+                                },
+                                {
+                                    id: 'avg_price',
+                                    data: avgPrice,
+                                    name: 'Average Price',
+                                    yAxis: 0,
+                                    visible: false
+                                }, {
+                                    type: 'klinger',
+                                    id: 'oscillator',
+                                    linkedTo: 'aapl',
+                                    yAxis: 2
+                                }
+                            ]
+                        }, function(chart) {
+                            document.getElementById('overlays').addEventListener('change', function(e) {
+                                var series = chart.get('overlay');
+
+                                if (series) {
+                                    series.remove(false);
+                                    chart.addSeries({
+                                        type: e.target.value,
+                                        linkedTo: 'aapl',
+                                        id: 'overlay'
+                                    });
+                                }
+                            });
+
+                            document.getElementById('oscillators').addEventListener('change', function(e) {
+                                var series = chart.get('oscillator');
+
+                                if (series) {
+                                    series.remove(false);
+                                    chart.addSeries({
+                                        type: e.target.value,
+                                        linkedTo: 'aapl',
+                                        id: 'oscillator',
+                                        yAxis: 2
+                                    });
+                                }
+                            });
+                        });
+                    });
+                } else {
+                    buttonDiv.remove();
+                    Highcharts.getJSON('{{ warframe_data_url }}', function(data) {
+                        // split the data set into ohlc and volume
+                        var ohlc = [],
+                            volume = [],
+
+                            dataLength = data.length;
+                        var bigData = {
+                            {
+                                warframe_data | tojson
+                            }
+                        };
+                        dataLength = bigData.length;
+                        var avgPrice = [];
+                        for (var i = 0; i < dataLength; i += 1) {
+                            ohlc.push([
+                                bigData[i][0], // the date
+                                bigData[i][1], // open
+                                bigData[i][2], // high
+                                bigData[i][3], // low
+                                bigData[i][4] // close
+                            ]);
+
+                            volume.push([
+                                bigData[i][0], // the date
+                                bigData[i][5] // the volume
+                            ]);
+
+                            avgPrice.push([
+                                bigData[i][0], // the date
+                                bigData[i][6] // the avg price
+                            ]);
+                        }
+
+                        // create the chart
+                        Highcharts.stockChart('container', {
+                            chart: {
+                                height: 600
+                            },
+                            title: {
+                                text: {
+                                    {
+                                        item_name | tojson
+                                    }
+                                }.concat(" Historical")
+                            },
+                            subtitle: {
+                                text: 'All indicators'
+                            },
+                            legend: {
+                                enabled: true
+                            },
+                            rangeSelector: {
+                                selected: 2
+                            },
+                            yAxis: [{
+                                height: '60%'
+                            }, {
+                                top: '60%',
+                                height: '20%'
+                            }, {
+                                top: '80%',
+                                height: '20%'
+                            }],
+                            plotOptions: {
+                                series: {
+                                    showInLegend: true
+                                }
+                            },
+                            series: [{
+                                    type: 'candlestick',
+                                    id: 'aapl',
+                                    name: {
+                                        {
+                                            item_name | tojson
+                                        }
+                                    },
+                                    data: bigData
+                                }, {
+                                    type: 'column',
+                                    id: 'volume',
+                                    name: 'Volume',
+                                    data: volume,
+                                    yAxis: 1
+                                }, {
+                                    type: 'pc',
+                                    id: 'overlay',
+                                    linkedTo: 'aapl',
+                                    yAxis: 0
+                                },
+                                {
+                                    id: 'avg_price',
+                                    data: avgPrice,
+                                    name: 'Average Price',
+                                    yAxis: 0,
+                                    visible: false
+                                }, {
+                                    type: 'klinger',
+                                    id: 'oscillator',
+                                    linkedTo: 'aapl',
+                                    yAxis: 2
+                                }
+                            ]
+                        }, function(chart) {
+                            document.getElementById('overlays').addEventListener('change', function(e) {
+                                var series = chart.get('overlay');
+
+                                if (series) {
+                                    series.remove(false);
+                                    chart.addSeries({
+                                        type: e.target.value,
+                                        linkedTo: 'aapl',
+                                        id: 'overlay'
+                                    });
+                                }
+                            });
+
+                            document.getElementById('oscillators').addEventListener('change', function(e) {
+                                var series = chart.get('oscillator');
+
+                                if (series) {
+                                    series.remove(false);
+                                    chart.addSeries({
+                                        type: e.target.value,
+                                        linkedTo: 'aapl',
+                                        id: 'oscillator',
+                                        yAxis: 2
+                                    });
+                                }
+                            });
+                        });
+                    });
+                }
+            }
+
+        })(window, document, undefined);
+
+        function rankSwitcher(rank) {
+
+            $("#rankSelector").html(rank);
+            var val2 = $.trim($("#rankSelector").text()).toLowerCase();
+            if (val2 === "max rank") {
+                Highcharts.getJSON('{{ warframe_data_url }}', function(data) {
+                    // split the data set into ohlc and volume
+                    var ohlc = [],
+                        volume = [],
+
+                        dataLength = data.length;
+                    var bigData = {
+                        {
+                            warframe_data | tojson
+                        }
+                    };
+                    dataLength = bigData.length;
+                    var avgPrice = [];
+                    if ({
+                            {
+                                rankedEvenLow | tojson
+                            }
+                        }) {
+                        var starter = 1;
+                    } else {
+                        var starter = 0;
+                    }
+                    for (var i = starter; i < dataLength; i += 2) {
+                        ohlc.push([
+                            bigData[i][0], // the date
+                            bigData[i][1], // open
+                            bigData[i][2], // high
+                            bigData[i][3], // low
+                            bigData[i][4] // close
+                        ]);
+
+                        volume.push([
+                            bigData[i][0], // the date
+                            bigData[i][5] // the volume
+                        ]);
+
+                        avgPrice.push([
+                            bigData[i][0], // the date
+                            bigData[i][6] // the avg price
+                        ]);
+                    }
+
+                    // create the chart
+                    Highcharts.stockChart('container', {
+                        chart: {
+                            height: 600
+                        },
+                        title: {
+                            text: {
+                                {
+                                    item_name | tojson
+                                }
+                            }.concat(" Historical")
+                        },
+                        subtitle: {
+                            text: 'All indicators'
+                        },
+                        legend: {
+                            enabled: true
+                        },
+                        rangeSelector: {
+                            selected: 2
+                        },
+                        yAxis: [{
+                            height: '60%'
+                        }, {
+                            top: '60%',
+                            height: '20%'
+                        }, {
+                            top: '80%',
+                            height: '20%'
+                        }],
+                        plotOptions: {
+                            series: {
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                                type: 'candlestick',
+                                id: 'aapl',
+                                name: {
+                                    {
+                                        item_name | tojson
+                                    }
+                                },
+                                data: ohlc
+                            }, {
+                                type: 'column',
+                                id: 'volume',
+                                name: 'Volume',
+                                data: volume,
+                                yAxis: 1
+                            }, {
+                                type: 'pc',
+                                id: 'overlay',
+                                linkedTo: 'aapl',
+                                yAxis: 0
+                            },
+                            {
+                                id: 'avg_price',
+                                data: avgPrice,
+                                name: 'Average Price',
+                                yAxis: 0,
+                                visible: false
+                            }, {
+                                type: 'klinger',
+                                id: 'oscillator',
+                                linkedTo: 'aapl',
+                                yAxis: 2
+                            }
+                        ]
+                    }, function(chart) {
+                        document.getElementById('overlays').addEventListener('change', function(e) {
+                            var series = chart.get('overlay');
+
+                            if (series) {
+                                series.remove(false);
+                                chart.addSeries({
+                                    type: e.target.value,
+                                    linkedTo: 'aapl',
+                                    id: 'overlay'
+                                });
+                            }
+                        });
+
+                        document.getElementById('oscillators').addEventListener('change', function(e) {
+                            var series = chart.get('oscillator');
+
+                            if (series) {
+                                series.remove(false);
+                                chart.addSeries({
+                                    type: e.target.value,
+                                    linkedTo: 'aapl',
+                                    id: 'oscillator',
+                                    yAxis: 2
+                                });
+                            }
+                        });
+                    });
+                });
+            } else if (val2 === "rank 0") {
+                Highcharts.getJSON('{{ warframe_data_url }}', function(data) {
+                    // split the data set into ohlc and volume
+                    var ohlc = [],
+                        volume = [],
+
+                        dataLength = data.length;
+                    var bigData = {
+                        {
+                            warframe_data | tojson
+                        }
+                    };
+                    dataLength = bigData.length;
+                    var avgPrice = [];
+                    if ({
+                            {
+                                rankedEvenLow | tojson
+                            }
+                        }) {
+                        var starter = 0;
+                    } else {
+                        var starter = 1;
+                    }
+                    for (var i = starter; i < dataLength; i += 2) {
+                        ohlc.push([
+                            bigData[i][0], // the date
+                            bigData[i][1], // open
+                            bigData[i][2], // high
+                            bigData[i][3], // low
+                            bigData[i][4] // close
+                        ]);
+
+                        volume.push([
+                            bigData[i][0], // the date
+                            bigData[i][5] // the volume
+                        ]);
+
+                        avgPrice.push([
+                            bigData[i][0], // the date
+                            bigData[i][6] // the avg price
+                        ]);
+                    }
+
+                    // create the chart
+                    Highcharts.stockChart('container', {
+                        chart: {
+                            height: 600
+                        },
+                        title: {
+                            text: {
+                                {
+                                    item_name | tojson
+                                }
+                            }.concat(" Historical")
+                        },
+                        subtitle: {
+                            text: 'All indicators'
+                        },
+                        legend: {
+                            enabled: true
+                        },
+                        rangeSelector: {
+                            selected: 2
+                        },
+                        yAxis: [{
+                            height: '60%'
+                        }, {
+                            top: '60%',
+                            height: '20%'
+                        }, {
+                            top: '80%',
+                            height: '20%'
+                        }],
+                        plotOptions: {
+                            series: {
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                                type: 'candlestick',
+                                id: 'aapl',
+                                name: {
+                                    {
+                                        item_name | tojson
+                                    }
+                                },
+                                data: ohlc
+                            }, {
+                                type: 'column',
+                                id: 'volume',
+                                name: 'Volume',
+                                data: volume,
+                                yAxis: 1
+                            }, {
+                                type: 'pc',
+                                id: 'overlay',
+                                linkedTo: 'aapl',
+                                yAxis: 0
+                            },
+                            {
+                                id: 'avg_price',
+                                data: avgPrice,
+                                name: 'Average Price',
+                                yAxis: 0,
+                                visible: false
+                            }, {
+                                type: 'klinger',
+                                id: 'oscillator',
+                                linkedTo: 'aapl',
+                                yAxis: 2
+                            }
+                        ]
+                    }, function(chart) {
+                        document.getElementById('overlays').addEventListener('change', function(e) {
+                            var series = chart.get('overlay');
+
+                            if (series) {
+                                series.remove(false);
+                                chart.addSeries({
+                                    type: e.target.value,
+                                    linkedTo: 'aapl',
+                                    id: 'overlay'
+                                });
+                            }
+                        });
+
+                        document.getElementById('oscillators').addEventListener('change', function(e) {
+                            var series = chart.get('oscillator');
+
+                            if (series) {
+                                series.remove(false);
+                                chart.addSeries({
+                                    type: e.target.value,
+                                    linkedTo: 'aapl',
+                                    id: 'oscillator',
+                                    yAxis: 2
+                                });
+                            }
+                        });
+                    });
+                });
+            }
+        }
+    </script>
+    <script>
+        $(function() {
+            var availableTags = [{
+                    %
+                    for item in items %
+                }
+                "{{item}}",
+                {
+                    % endfor %
+                }
+            ];
+            $("#search_items").autocomplete({
+                source: function(req, response) {
+                    var results = $.ui.autocomplete.filter(availableTags, req.term);
+                    response(results.slice(0, 10)); //for getting 5 results
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Tools</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('primes_buy') }}" class="dropdown-item">Prime Ranking - Buy</a>
+                        <a href="{{ url_for('primes_sell') }}" class="dropdown-item">Prime Ranking - Sell</a>
+                    </div>
+                </div>
+            </div>
+            <form class="form-inline ml-auto" action="/predict" method="POST" enctype="multipart/form-data">
+                <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search_items" id="search_items" autocomplete="off">
+                <button type="submit" class="btn btn-outline-light">Search</button>
+            </form>
+        </div>
+    </nav>
+    <div id="rankButton" style="padding-left: 4vw; padding-top: 2vh; padding-bottom: 2vh;"></div>
+    <div class="main-wrapper">
+        <div class="selectors-container">
+            <div class="col">
+                <label for="overlays">Overlays:</label>
+                <select class="left-select" id="overlays">
+                    <option value="abands">Acceleration Bands</option>
+                    <option value="bb">Bollinger Bands</option>
+                    <option value="dema">DEMA (Double Exponential Moving Average)</option>
+                    <option value="ema">EMA (Exponential Moving Average)</option>
+                    <option value="ikh">Ichimoku Kinko Hyo</option>
+                    <option value="keltnerchannels">Keltner Channels</option>
+                    <option value="linearRegression">Linear Regression</option>
+                    <option value="pivotpoints">Pivot Points</option>
+                    <option value="pc" selected="selected">Price Channel</option>
+                    <option value="priceenvelopes">Price Envelopes</option>
+                    <option value="psar">PSAR (Parabolic SAR)</option>
+                    <option value="sma">SMA (Simple Moving Average)</option>
+                    <option value="supertrend">Super Trend</option>
+                    <option value="tema">TEMA (Triple Exponential Moving Average)</option>
+                    <option value="vbp">VbP (Volume by Price)</option>
+                    <option value="vwap">WMA (Weighted Moving Average)</option>
+                    <option value="wma">VWAP (Volume Weighted Average Price)</option>
+                    <option value="zigzag">Zig Zag</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="oscillators">Oscillators:</label>
+                <select class="right-select" id="oscillators">
+                    <option value="apo">Absolute price indicator</option>
+                    <option value="ad">A/D (Accumulation/Distribution)</option>
+                    <option value="aroon">Aroon</option>
+                    <option value="aroonoscillator">Aroon oscillator</option>
+                    <option value="atr">ATR (Average True Range)</option>
+                    <option value="ao">Awesome oscillator</option>
+                    <option value="cci">CCI (Commodity Channel Index)</option>
+                    <option value="chaikin">Chaikin</option>
+                    <option value="cmf">CMF (Chaikin Money Flow)</option>
+                    <option value="disparityindex">Disparity Index</option>
+                    <option value="cmo">CMO (Chande Momentum Oscillator)</option>
+                    <option value="dmi">DMI (Directional Movement Index)</option>
+                    <option value="dpo">Detrended price</option>
+                    <option value="linearRegressionAngle">Linear Regression Angle</option>
+                    <option value="linearRegressionIntercept">Linear Regression Intercept</option>
+                    <option value="linearRegressionSlope">Linear Regression Slope</option>
+                    <option value="klinger" selected="selected">Klinger Oscillator</option>
+                    <option value="mfi">MFI (Money Flow Index)</option>
+                    <option value="momentum">Momentum</option>
+                    <option value="natr">NATR (Normalized Average True Range)</option>
+                    <option value="obv">OBV (On-Balance Volume)</option>
+                    <option value="ppo">Percentage Price oscillator</option>
+                    <option value="roc">RoC (Rate of Change)</option>
+                    <option value="rsi">RSI (Relative Strength Index)</option>
+                    <option value="slowstochastic">Slow Stochastic</option>
+                    <option value="stochastic">Stochastic</option>
+                    <option value="trix">TRIX</option>
+                    <option value="williamsr">Williams %R</option>
+                </select>
+            </div>
+        </div>
+        <div id="container"></div>
+    </div>
+</body>
+
+</html>

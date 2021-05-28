@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/utils.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.min.css">
+
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/jquery-ui.min.js"></script>
+        <script src="/static/js/popper.min.js"></script>
+        <script src="/static/js/jquery.dataTables.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <style>
+
+            #table th,
+            #table td {
+            text-align: left;
+            padding: 12px;
+            }
+
+            #table tr {
+            border-bottom: 1px solid rgb(0, 0, 0);
+            }
+
+    
+            .table-striped>tbody>tr:nth-child(odd)>td, 
+            .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: #31363c;
+            }
+
+            .table-striped>tbody>tr:nth-child(even)>td, 
+            .table-striped>tbody>tr:nth-child(even)>th {
+            background-color: #222833;
+            }
+            
+            html, body {
+            font-family: 'Montserrat Alternates', sans-serif;
+            color: #FFFFFF;
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            }
+            *, *:before, *:after {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            user-select: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            }
+            a, a:visited, a:hover {
+            color: inherit;
+            text-decoration: none;
+            }
+            main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0 auto;
+            padding: 0 26px;
+            width: 100%;
+            height: 100%;
+            background: rgba(154,57,163,1);
+            background: -moz-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
+            background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(154,57,163,1)), color-stop(100%, rgba(65,103,168,1)));
+            background: -webkit-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
+            background: -o-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
+            background: -ms-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
+            background: linear-gradient(135deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9a39a3', endColorstr='#4167a8', GradientType=1 );
+            }
+            .container {
+            position: relative;
+            margin: calc(2vh + 2vw) auto 0 auto;
+            padding: 0;
+            width: 100%;
+            max-width: 840px;
+            }
+            .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 60px;
+            border-radius: 120px;
+            }
+            .search-icon, .go-icon {
+            position: absolute;
+            top: 0;
+            height: 60px;
+            width: 86px;
+            line-height: 61px;
+            text-align: center;
+            }
+            .search-icon {
+            left: 0;
+            pointer-events: none;
+            font-size: 1.22em;
+            will-change: transform;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            transform-origin: center center;
+            -webkit-transform-origin: center center;
+            -moz-transform-origin: center center;
+            -o-transform-origin: center center;
+            transition: transform 400ms 220ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -webkit-transition: transform 400ms 220ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -moz-transition: transform 400ms 220ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -o-transition: transform 400ms 220ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            }
+            .si-rotate {
+            transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            }
+            .go-icon {
+            right: 0;
+            pointer-events: none;
+            font-size: 1.38em;
+            will-change: opacity;
+            cursor: default;
+            opacity: 0;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transition: opacity 190ms ease-out, transform 260ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -webkit-transition: opacity 190ms ease-out, transform 260ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -moz-transition: opacity 190ms ease-out, transform 260ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -o-transition: opacity 190ms ease-out, transform 260ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            }
+            .go-in {
+            opacity: 1;
+            pointer-events: all;
+            cursor: pointer;
+            transform: rotate(0);
+            -webkit-transform: rotate(0);
+            -moz-transform: rotate(0);
+            -o-transform: rotate(0);
+            transition: opacity 190ms ease-out, transform 260ms 20ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -webkit-transition: opacity 190ms ease-out, transform 260ms 20ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -moz-transition: opacity 190ms ease-out, transform 260ms 20ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            -o-transition: opacity 190ms ease-out, transform 260ms 20ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+            }
+            .search-border {
+            display: block;
+            width: 100%;
+            max-width: 360px;
+            height: 60px;
+            }
+            .border {
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 5;
+            stroke-miterlimit: 10;
+            }
+            .border {
+            stroke-dasharray: 740;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 400ms cubic-bezier(0.600, 0.040, 0.735, 0.990);
+            -webkit-transition: stroke-dashoffset 400ms cubic-bezier(0.600, 0.040, 0.735, 0.990);
+            -moz-transition: stroke-dashoffset 400ms cubic-bezier(0.600, 0.040, 0.735, 0.990);
+            -o-transition: stroke-dashoffset 400ms cubic-bezier(0.600, 0.040, 0.735, 0.990);
+            }
+            .border-searching .border {
+            stroke-dasharray: 740;
+            stroke-dashoffset: 459;
+            transition: stroke-dashoffset 650ms cubic-bezier(0.755, 0.150, 0.205, 1.000);
+            -webkit-transition: stroke-dashoffset 650ms cubic-bezier(0.755, 0.150, 0.205, 1.000);
+            -moz-transition: stroke-dashoffset 650ms cubic-bezier(0.755, 0.150, 0.205, 1.000);
+            -o-transition: stroke-dashoffset 650ms cubic-bezier(0.755, 0.150, 0.205, 1.000);
+            }
+            #search {
+            font-family: 'Montserrat Alternates', sans-serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 120px;
+            border: none;
+            background: rgba(255,255,255,0);
+            padding: 0 68px 0 68px;
+            color: #FFFFFF;
+            font-size: 1.32em;
+            font-weight: 400;
+            letter-spacing: -0.015em;
+            outline: none;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+            box-sizing: border-box;
+            display: inline-block;
+            min-width: 1.5em;
+            padding: 0.5em 1em;
+            margin-left: 2px;
+            text-align: center;
+            text-decoration: none !important;
+            cursor: pointer;
+            *cursor: hand;
+            color: #fffdfd !important;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            color: #040404 !important;
+            border: 1px solid #979797;
+            background-color: white;
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #dcdcdc));
+            /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, white 0%, #dcdcdc 100%);
+            /* Chrome10+,Safari5.1+ */
+            background: -moz-linear-gradient(top, white 0%, #dcdcdc 100%);
+            /* FF3.6+ */
+            background: -ms-linear-gradient(top, white 0%, #dcdcdc 100%);
+            /* IE10+ */
+            background: -o-linear-gradient(top, white 0%, #dcdcdc 100%);
+            /* Opera 11.10+ */
+            background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
+            /* W3C */
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+            cursor: default;
+            color: #666 !important;
+            border: 1px solid transparent;
+            background: transparent;
+            box-shadow: none;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: white !important;
+            border: 1px solid #e3e3e3;
+            background-color: white;
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #e3e3e3));
+            /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, white 0%, #e3e3e3 100%);
+            /* Chrome10+,Safari5.1+ */
+            background: -moz-linear-gradient(top, white 0%, #e3e3e3 100%);
+            /* FF3.6+ */
+            background: -ms-linear-gradient(top, white 0%, #e3e3e3 100%);
+            /* IE10+ */
+            background: -o-linear-gradient(top, white 0%, #e3e3e3 100%);
+            /* Opera 11.10+ */
+            background: linear-gradient(to bottom, white 0%, #e3e3e3 100%);
+            /* W3C */
+            }
+            .dataTables_length select{
+                color:rgb(194, 194, 194) !important;
+            }
+            .dataTables_length{
+                color:rgb(194, 194, 194) !important;
+            }
+            .dataTables_info{
+                color:rgb(194, 194, 194) !important;
+            }
+            .dataTables_wrapper{
+                width:80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .help-tip{
+                position: relative;
+                bottom: 0.3vh;
+                left: 0.5vw;
+                text-align: center;
+                background-color: #BCDBEA;
+                border-radius: 50%;
+                width: 15px;
+                height: 15px;
+                font-size: 7px;
+                line-height: 13px;
+                cursor: default;
+                display:inline-block;
+            }
+
+            .help-tip:before{
+                content:'?';
+                font-weight: bold;
+                color:#fff;
+            }
+
+            .help-tip:hover p{
+                display:block;
+                transform-origin: 100% 0%;
+
+                -webkit-animation: fadeIn 0.3s ease-in-out;
+                animation: fadeIn 0.3s ease-in-out;
+
+            }
+
+            .help-tip p{    /* The tooltip */
+                display: none;
+                text-align: left;
+                background-color: #1E2021;
+                padding: 20px;
+                width: 300px;
+                position: absolute;
+                border-radius: 3px;
+                box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+                right: -4px;
+                color: #FFF;
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .help-tip p:before{ /* The pointer of the tooltip */
+                position: absolute;
+                content: '';
+                width:0;
+                height: 0;
+                border:6px solid transparent;
+                border-bottom-color:#1E2021;
+                right:10px;
+                top:-12px;
+            }
+
+            .help-tip p:after{ /* Prevents the tooltip from being hidden */
+                width:100%;
+                height:40px;
+                content:'';
+                position: absolute;
+                top:-40px;
+                left:0;
+            }
+
+            /* CSS animation */
+
+            @-webkit-keyframes fadeIn {
+                0% { 
+                    opacity:0; 
+                    transform: scale(0.6);
+                }
+
+                100% {
+                    opacity:100%;
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes fadeIn {
+                0% { opacity:0; }
+                100% { opacity:100%; }
+            }
+            #search::-webkit-input-placeholder {color: #FFFFFF;}
+            #search::-moz-placeholder {color: #FFFFFF;}
+            #search:-ms-input-placeholder {color: #FFFFFF;}
+            #search:-moz-placeholder {color: #FFFFFF;}
+            #search::-moz-selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
+            #search::selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
+
+        </style>
+        <script>
+            function ExcludeSearch(term, column) {
+                //apply search plugin
+                console.log(term)
+                $.fn.dataTable.ext.search.push(
+                    function(settings, data, dataIndex) {
+                        //if column data != to search term then return true to display
+                        if (!(data[column] === term[0] || data[column] === term[1] || data[column] === term[2] || data[column] === term[3])) return true;
+                    
+                        //otherwise return false to filter from display
+                        return false;
+                    }   
+                );
+                //draw table based on search
+                var dataTableCreated = $.fn.dataTable.tables( { api: true } );
+                dataTableCreated.draw();
+                //remove search plugin
+                $.fn.dataTable.ext.search.pop();
+            }
+            function searchRow() {
+                var dataTableCreated = $.fn.dataTable.tables( { api: true } );
+                dataTableCreated.column(2).search("");
+                var val2 = $.trim($("#deviceSelector").text()).toLowerCase();
+                var other = false;
+                if (val2 === "all prime items"){
+                    val2 = "";
+                }
+                else if(val2 === "warframes"){
+                    val2 = "warframe";
+                }
+                else if(val2 === "primary weapons"){
+                    val2 = "Weapon (Primary)";
+                }
+                else if(val2 === "secondary weapons"){
+                    val2 = "Weapon (Secondary)";
+                }
+                else if(val2 === "melee weapons"){
+                    val2 = "Weapon (Melee)";
+                }
+                else if(val2 === "other"){
+                    val2 = ["Weapon (Melee)", "Weapon (Secondary)", "Warframe", "Weapon (Primary)"];
+                    other = true;
+                }
+                if (other){
+                    var column = dataTableCreated.column(2);
+                    ExcludeSearch(val2, column.index());
+                }
+                else{
+                    dataTableCreated.column(2).search(val2).draw();
+                }
+
+            }
+
+            function searchTableDevice(device) {
+                var filter, table, tr, td, i;
+
+                $("#deviceSelector").html(device);
+
+                if (device == "all") {
+                    $("#deviceSelector").html("All Prime Items");
+                }
+
+                searchRow();
+            }
+            $(document).ready(function(){
+                $("#search").focus(function() {
+                $(".search-box").addClass("border-searching");
+                $(".search-icon").addClass("si-rotate");
+                });
+                $("#search").blur(function() {
+                $(".search-box").removeClass("border-searching");
+                $(".search-icon").removeClass("si-rotate");
+                });
+            });
+            $(document).ready(function() {
+                var theDataTable = $('#dataTable').DataTable( {
+                    "pagingType": "full_numbers",
+                    "dom": "ltipr",
+                    "columnDefs": [
+                        { "type": "html-num", targets: 3, className: 'text-center'},
+                        { "type": "html-num", targets: 0, className: 'text-center'},
+                        { targets: 1, className: 'text-center', searchable: true},
+                        { targets: 2, className: 'text-center'},
+                        { targets: 3, className: 'text-center'},
+                        { targets: 4, className: 'text-center'},
+                    ],
+                    "order": [[ 3, "desc" ]]
+                } );
+                $('#search').keyup(function(e) {
+                    var value = $(this).val();
+                    theDataTable.column(1).search(value).draw();
+                });
+            } );
+            $( function() {
+            var availableTags = [
+                {% for item in items %}
+                    "{{item}}",
+                {% endfor %}
+            ];
+            $( "#search_items" ).autocomplete({
+                source: function(req, response) {
+                    var results = $.ui.autocomplete.filter(availableTags, req.term);
+                    response(results.slice(0, 10));//for getting 5 results
+                }
+            });
+            } );
+
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav">
+                    <a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
+                    <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Tools</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('primes_buy') }}" class="dropdown-item">Prime Ranking - Buy</a>
+                        <a href="{{ url_for('primes_sell') }}" class="dropdown-item">Prime Ranking - Sell</a>
+                    </div>
+                </div>
+                </div>
+                <form class="form-inline ml-auto" action="/predict" method="POST" enctype="multipart/form-data">
+                    <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search_items" id="search_items" autocomplete="off">
+                    <button type="submit" class="btn btn-outline-light">Search</button>
+                </form>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="search-box">
+                        <div class="search-icon"><i class="fa fa-search search-icon"></i></div>
+                        <form action="" class="search-form">
+                            <input type="text" placeholder="Search Prime Items..." id="search" autocomplete="off">
+                        </form>
+                        <svg class="search-border" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" viewBox="0 0 671 111" style="enable-background:new 0 0 671 111;"
+                        xml:space="preserve">
+                        <path class="border" d="M335.5,108.5h-280c-29.3,0-53-23.7-53-53v0c0-29.3,23.7-53,53-53h280"/>
+                        <path class="border" d="M335.5,108.5h280c29.3,0,53-23.7,53-53v0c0-29.3-23.7-53-53-53h-280"/>
+                        </svg>
+                        <div class="go-icon"><i class="fa fa-arrow-right"></i></div>
+                    </div>
+                </div>
+        
+                <div class="col-sm">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            id="deviceSelector" style="min-width: 5vw; min-height: 5vh; margin-top: 1vh;">
+                                    All Prime Items
+                                    </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice(this.innerHTML)">Warframes</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice(this.innerHTML)">Primary Weapons</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice(this.innerHTML)">Secondary Weapons</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice(this.innerHTML)">Melee Weapons</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice(this.innerHTML)">Other</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="searchTableDevice('all')">All</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <table id="dataTable" class="table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th style="width:10%;">Rank</th>
+                    <th style="width:10%;">Item Name</th>
+                    <th style="width:10%;">Item Type</th>
+                    <th style="width:10%;">Score <div class="help-tip">
+                        <p>The scores are what determine each item's ranks. Higher ranked means the item is predicted to be better to {{ buy_sell }} as of right now. The score calculation is described in the <a href="{{ url_for('about') }}">about</a> page.</p>
+                    </div></th>
+                    <th style="width:30%;">Market Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td><a href="{{ row[4] }}">{{ row[4] }}</a> </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
