@@ -8,7 +8,7 @@ from flask_cachecontrol import FlaskCacheControl
 
 app = Flask(__name__)
 
-cache_dir = osp.join(os.getcwd(), "cache")
+cache_dir = osp.join(osp.dirname(osp.realpath(__file__)), "cache")
 if osp.exists(cache_dir):
     cache_dir = cache_dir
 else:
@@ -18,6 +18,7 @@ config = {
     "CACHE_DEFAULT_TIMEOUT": 3000,
     "CACHE_DIR": cache_dir,
     "SEND_FILE_MAX_AGE_DEFAULT": 10800,
+    "CACHE_THRESHOLD": 400,
 }
 app.config.from_mapping(config)
 app.secret_key = os.environ.get("APP_SECRET")
