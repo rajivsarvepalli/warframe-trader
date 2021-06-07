@@ -1,6 +1,8 @@
-# Warframe Trader
+# [Warframe Trader](https://rajivsarvepalli.pythonanywhere.com/)
 
-Warframe trader is a website designed to analyze the data collected by [warframe market](https://warframe.market/) and make predictions for the in-game market on warframe.
+[Warframe trader](https://rajivsarvepalli.pythonanywhere.com/) is a website designed to analyze the data collected by [warframe market](https://warframe.market/) and make predictions for the in-game market on warframe.
+
+The website is availbale at: https://rajivsarvepalli.pythonanywhere.com/.
 
 ## Motivation
 
