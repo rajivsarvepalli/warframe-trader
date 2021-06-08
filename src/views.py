@@ -148,31 +148,39 @@ def predict() -> str:
         return render_template("404.html")
     stats = get_stats(item_to_find)
     warframe_data = []
-    for d, o, h, l, c, v, ap in zip(
-        stats["dates"],
-        stats["open_prices"],
-        stats["max_prices"],
-        stats["min_prices"],
-        stats["closed_prices"],
-        stats["volumes"],
-        stats["avg_prices"],
-    ):
-        warframe_data.append([d, o, h, l, c, v, ap])
+    
     ranked_item = False
-    rankedEvenLow = None
     if len(stats["mod_ranks"]) > 0:
         ranked_item = True
-        rankedEvenLow = True
-        if len(stats["avg_prices"]) >= 2:
-            if stats["open_prices"][0] > stats["open_prices"][1]:
-                rankedEvenLow = False
+        for d, o, h, l, c, v, ap, mr in zip(
+            stats["dates"],
+            stats["open_prices"],
+            stats["max_prices"],
+            stats["min_prices"],
+            stats["closed_prices"],
+            stats["volumes"],
+            stats["avg_prices"],
+            stats["mod_ranks"],
+        ):
+            warframe_data.append([d, o, h, l, c, v, ap, mr])
+    else:
+        for d, o, h, l, c, v, ap in zip(
+            stats["dates"],
+            stats["open_prices"],
+            stats["max_prices"],
+            stats["min_prices"],
+            stats["closed_prices"],
+            stats["volumes"],
+            stats["avg_prices"],
+            stats["mod_ranks"],
+        ):
+            warframe_data.append([d, o, h, l, c, v, ap])
     return render_template(
         "charts.html",
         warframe_data_url=warframe_data_url,
         warframe_data=warframe_data,
         item_name=item_to_find.title(),
         items=item_names,
-        rankedEvenLow=rankedEvenLow,
         ranked_item=ranked_item,
     )
 
