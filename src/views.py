@@ -1,5 +1,13 @@
 """The different views for the flask application."""
-from flask import render_template, request, send_from_directory, make_response, abort
+from flask import (
+    render_template,
+    request,
+    send_from_directory,
+    make_response,
+    abort,
+    redirect,
+    url_for,
+)
 from flask.wrappers import Response
 from flask_cachecontrol import (
     cache_for,
@@ -134,21 +142,18 @@ def home() -> str:
         )
 
 
-@app.route("/predict", methods=["POST", "GET"])
-@dont_cache(only_if=Always)
-def predict() -> str:
-    """View for the statistics page."""
-    item_to_find = request.form["search_items"]
-    # compute url for warframe data based on name
-    # do some checking to make sure name is valid
-    # save all the data required in firebase
+@app.route("/items/<string:item_name>", methods=["GET"])
+@cache_for(only_if=ResponseIsSuccessful, hours=3)
+def item_stats(item_name):
+    """View for each item's statistics page."""
+    item_to_find = item_name
     warframe_data_url = "https://demo-live-data.highcharts.com/aapl-ohlcv.json"
     item_names = get_items()
     if item_to_find not in item_names:
         return render_template("404.html")
     stats = get_stats(item_to_find)
     warframe_data = []
-    
+
     ranked_item = False
     if len(stats["mod_ranks"]) > 0:
         ranked_item = True
@@ -182,6 +187,17 @@ def predict() -> str:
         items=item_names,
         ranked_item=ranked_item,
     )
+
+
+@app.route("/predict", methods=["POST", "GET"])
+@dont_cache(only_if=Always)
+def predict() -> str:
+    """Route to the statistics page."""
+    item_to_find = request.form["search_items"]
+    # compute url for warframe data based on name
+    # do some checking to make sure name is valid
+    # save all the data required in firebase
+    return redirect(url_for("item_stats", item_name=item_to_find))
 
 
 @app.route("/primes_sell", methods=["GET"])
