@@ -69,30 +69,29 @@
                         var bigData = {{ warframe_data | tojson }};
                         dataLength = bigData.length;
                         var avgPrice = [];
-                        if ({{ rankedEvenLow | tojson }}) {
-                            var starter = 1;
-                        } else {
-                            var starter = 0;
-                        }
+                        var starter = 0;
                         console.log(bigData.length)
-                        for (var i = starter; i < dataLength; i += 2) {
-                            ohlc.push([
-                                bigData[i][0], // the date
-                                bigData[i][1], // open
-                                bigData[i][2], // high
-                                bigData[i][3], // low
-                                bigData[i][4] // close
-                            ]);
+                        for (var i = starter; i < dataLength; i += 1) {
+                            // if mod rank is maxed
+                            if (bigData[i][7] > 0) {
+                                ohlc.push([
+                                    bigData[i][0], // the date
+                                    bigData[i][1], // open
+                                    bigData[i][2], // high
+                                    bigData[i][3], // low
+                                    bigData[i][4] // close
+                                ]);
 
-                            volume.push([
-                                bigData[i][0], // the date
-                                bigData[i][5] // the volume
-                            ]);
+                                volume.push([
+                                    bigData[i][0], // the date
+                                    bigData[i][5] // the volume
+                                ]);
 
-                            avgPrice.push([
-                                bigData[i][0], // the date
-                                bigData[i][6] // the avg price
-                            ]);
+                                avgPrice.push([
+                                    bigData[i][0], // the date
+                                    bigData[i][6] // the avg price
+                                ]);
+                            }
                         }
                         // create the chart
                         Highcharts.stockChart('container', {
@@ -324,29 +323,28 @@
                     var bigData = {{ warframe_data | tojson }};
                     dataLength = bigData.length;
                     var avgPrice = [];
-                    if ({{ rankedEvenLow | tojson }}) {
-                        var starter = 1;
-                    } else {
-                        var starter = 0;
-                    }
-                    for (var i = starter; i < dataLength; i += 2) {
-                        ohlc.push([
-                            bigData[i][0], // the date
-                            bigData[i][1], // open
-                            bigData[i][2], // high
-                            bigData[i][3], // low
-                            bigData[i][4] // close
-                        ]);
+                    var starter = 0;
+                    for (var i = starter; i < dataLength; i += 1) {
+                        // if mod rank is maxed
+                        if (bigData[i][7] > 0) {
+                            ohlc.push([
+                                bigData[i][0], // the date
+                                bigData[i][1], // open
+                                bigData[i][2], // high
+                                bigData[i][3], // low
+                                bigData[i][4] // close
+                            ]);
 
-                        volume.push([
-                            bigData[i][0], // the date
-                            bigData[i][5] // the volume
-                        ]);
+                            volume.push([
+                                bigData[i][0], // the date
+                                bigData[i][5] // the volume
+                            ]);
 
-                        avgPrice.push([
-                            bigData[i][0], // the date
-                            bigData[i][6] // the avg price
-                        ]);
+                            avgPrice.push([
+                                bigData[i][0], // the date
+                                bigData[i][6] // the avg price
+                            ]);
+                        }
                     }
 
                     // create the chart
@@ -449,29 +447,28 @@
                     var bigData = {{ warframe_data | tojson }};
                     dataLength = bigData.length;
                     var avgPrice = [];
-                    if ({{ rankedEvenLow | tojson }}) {
-                        var starter = 0;
-                    } else {
-                        var starter = 1;
-                    }
-                    for (var i = starter; i < dataLength; i += 2) {
-                        ohlc.push([
-                            bigData[i][0], // the date
-                            bigData[i][1], // open
-                            bigData[i][2], // high
-                            bigData[i][3], // low
-                            bigData[i][4] // close
-                        ]);
+                    var starter = 0;
+                    for (var i = starter; i < dataLength; i += 1) {
+                        // if mod rank is 0
+                        if (bigData[i][7] == 0) {
+                            ohlc.push([
+                                bigData[i][0], // the date
+                                bigData[i][1], // open
+                                bigData[i][2], // high
+                                bigData[i][3], // low
+                                bigData[i][4] // close
+                            ]);
 
-                        volume.push([
-                            bigData[i][0], // the date
-                            bigData[i][5] // the volume
-                        ]);
+                            volume.push([
+                                bigData[i][0], // the date
+                                bigData[i][5] // the volume
+                            ]);
 
-                        avgPrice.push([
-                            bigData[i][0], // the date
-                            bigData[i][6] // the avg price
-                        ]);
+                            avgPrice.push([
+                                bigData[i][0], // the date
+                                bigData[i][6] // the avg price
+                            ]);
+                        }
                     }
 
                     // create the chart
