@@ -1,5 +1,11 @@
 <html>
     <head>
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/jquery-ui.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
         <script>
             $( function() {
                 var availableTags = [
@@ -15,25 +21,63 @@
                 });
                 } );
         </script>
-        <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="/static/css/jquery-ui.min.css" rel="stylesheet" id="jquery-ui-css">
-        <script src="/static/js/jquery.min.js"></script>
-        <script src="/static/js/jquery-ui.min.js"></script>
-        <script src="/static/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
         <style>
-            p{
-                max-width:40vw;
-                word-wrap:break-word;
-            }
             body {
                 font-family: "Arial";
-                color: white;
+                color:#DCDCDC;
                 background: #b92b27;  /* fallback for old browsers */background: -webkit-linear-gradient(to right, #1565C0, #b92b27);  /* Chrome 10-25, Safari 5.1-6 */
                 background: #485563; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+                margin: 0;
+                padding: 0;
+                line-height: 1.4;
             }
             a {
-            color: #03DAC6;
+                color: #03DAC6;
+            }
+            article {
+                display: grid;
+                /* I'm using 440px instead of 740px as it makes it easier to view it in the Scrimba simulator additive-symbols: */
+                grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+            }
+            article > * {
+                grid-column: 4;
+            }
+            article > figure {  
+                grid-column: 1 / -1;  
+                margin: 20px 0;  
+            }
+            article > .aside {
+                grid-column: 5 / -1;
+            }
+            article > p {    
+                --x-height-multiplier: 0.375;
+                --baseline-multiplier: 0.17;
+                font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+                letter-spacing: .01rem;
+                font-weight: 400;
+                font-style: normal;
+                font-size: 21px;
+                line-height: 1.58;
+                letter-spacing: -.003em;
+                color: #DCDCDC;
+                text-rendering: optimizeLegibility;
+                -webkit-font-smoothing: antialiased;
+            }
+            article > h1 {
+                font-family: Lucida Grande;
+                color: white;
+            }
+            article > h2 {
+                font-family: Lucida Grande;
+                color: white;
+            }
+            article > h3 {
+                font-family: Lucida Grande;
+                color: white;
+            }
+            article > h4 {
+                font-family: Lucida Grande;
+                color: white;
             }
         </style>
     </head>
@@ -60,6 +104,8 @@
                 </form>
             </div>
         </nav>
+        <article>
+
         <h1 id="warframe-trader">Warframe Trader</h1>
         <p>Warframe trader is a website designed to analyze the data collected by <a href="https://warframe.market/">warframe market</a> and make predictions for the in-game market on warframe. Check out the source code
         on <a href="https://github.com/rajivsarvepalli/warframe-trader">GitHub</a> if you are interested in contributing.</p>
@@ -99,6 +145,7 @@
         time and lack of computational resources are why I did not implement it for this website.</p>
         <h2 id="credit">Credit</h2>
         <p>All credit to <a href="https://warframe.market/">warframe market</a> for the data collected and used in this website. Additionally, the charts are created using a <a href="https://www.highcharts.com/demo/stock/all-indicators">HighCharts demo</a> to create the stock charts. And of course, thanks to <a href="https://www.pythonanywhere.com/">PythonAnywhere</a> for enabling a way to freely host a web app. </p>
+        </article>
 
 
     </body>
