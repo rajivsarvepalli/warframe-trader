@@ -144,7 +144,7 @@ def home() -> str:
 
 @app.route("/items/<string:item_name>", methods=["GET"])
 @cache_for(only_if=ResponseIsSuccessful, hours=3)
-def item_stats(item_name):
+def item_stats(item_name: str) -> str:
     """View for each item's statistics page."""
     item_to_find = item_name
     warframe_data_url = "https://demo-live-data.highcharts.com/aapl-ohlcv.json"
