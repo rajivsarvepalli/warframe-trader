@@ -172,7 +172,6 @@ def predict() -> str:
             stats["closed_prices"],
             stats["volumes"],
             stats["avg_prices"],
-            stats["mod_ranks"],
         ):
             warframe_data.append([d, o, h, l, c, v, ap])
     return render_template(
