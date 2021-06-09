@@ -7,11 +7,13 @@
         <link rel="stylesheet" type="text/css" href="/static/css/utils.css">
         <link rel="stylesheet" type="text/css" href="/static/css/style.css">
         <link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.min.css">
+        <link href="/static/css/responsive.dataTables.min.css" rel="stylesheet" id="responsive-jquery-ui-css">
 
         <script src="/static/js/jquery.min.js"></script>
         <script src="/static/js/jquery-ui.min.js"></script>
         <script src="/static/js/popper.min.js"></script>
         <script src="/static/js/jquery.dataTables.min.js"></script>
+        <script src="/static/js/dataTables.responsive.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <style>
 
@@ -436,6 +438,7 @@
             });
             $(document).ready(function() {
                 var theDataTable = $('#dataTable').DataTable( {
+                    responsive: true,
                     "pagingType": "full_numbers",
                     "dom": "ltipr",
                     "columnDefs": [
