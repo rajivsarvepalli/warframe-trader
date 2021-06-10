@@ -50,7 +50,7 @@ time and lack of computational resources are why I did not implement it for this
 
 ## Contribute
 
-Feel free to contribute to this website using the `dev` branch to create pull requests. Also, feel free to open an issue if there are some potential ideas or additions you would like to see. This is my first project on front-end work, so do not be surprised if the HTML/javascript code is super messy.
+Feel free to contribute to this website using the [`dev` branch](https://github.com/rajivsarvepalli/warframe-trader/tree/dev) to create pull requests. Also, feel free to open an [issue](https://github.com/rajivsarvepalli/warframe-trader/issues) if there are some potential ideas or additions you would like to see. This is my first project on front-end work, so do not be surprised if the HTML/javascript code is super messy. The deployment is continuous so any commits to the main branch will automatically deploy to the actual website.
 
 
 ## Credit

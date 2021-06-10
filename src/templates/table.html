@@ -16,7 +16,9 @@
         <script src="/static/js/dataTables.responsive.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <style>
-
+            #dataTable {
+                display: none;
+            }
             #table th,
             #table td {
             text-align: left;
@@ -428,7 +430,6 @@
                 searchRow();
             }
             $(document).ready(function(){
-                document.getElementById('dataTable').style.visibility = "hidden";
                 $("#search").focus(function() {
                     $(".search-box").addClass("border-searching");
                     $(".search-icon").addClass("si-rotate");
@@ -440,10 +441,6 @@
             });
             $(document).ready(function() {
                 var theDataTable = $('#dataTable').DataTable( {
-                    initComplete: function( settings, json ) {
-                        // Show table
-                        document.getElementById('dataTable').style.visibility = "visible";
-                    },
                     responsive: true,
                     "pagingType": "full_numbers",
                     "dom": "ltipr",
@@ -455,7 +452,10 @@
                         { targets: 3, className: 'text-center'},
                         { targets: 4, className: 'text-center'},
                     ],
-                    "order": [[ 3, "desc" ]]
+                    "order": [[ 3, "desc" ]],
+                    "initComplete": function(){ 
+                        $("#dataTable").show(); 
+                    }
                 } );
                 $('#search').keyup(function(e) {
                     var value = $(this).val();
