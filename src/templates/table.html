@@ -428,17 +428,22 @@
                 searchRow();
             }
             $(document).ready(function(){
+                document.getElementById('dataTable').style.visibility = "hidden";
                 $("#search").focus(function() {
-                $(".search-box").addClass("border-searching");
-                $(".search-icon").addClass("si-rotate");
+                    $(".search-box").addClass("border-searching");
+                    $(".search-icon").addClass("si-rotate");
                 });
                 $("#search").blur(function() {
-                $(".search-box").removeClass("border-searching");
-                $(".search-icon").removeClass("si-rotate");
+                    $(".search-box").removeClass("border-searching");
+                    $(".search-icon").removeClass("si-rotate");
                 });
             });
             $(document).ready(function() {
                 var theDataTable = $('#dataTable').DataTable( {
+                    initComplete: function( settings, json ) {
+                        // Show table
+                        document.getElementById('dataTable').style.visibility = "visible";
+                    },
                     responsive: true,
                     "pagingType": "full_numbers",
                     "dom": "ltipr",
